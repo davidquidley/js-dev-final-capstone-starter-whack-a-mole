@@ -49,16 +49,10 @@ const getGameRenderItem = (idx) => {
 function startGame() {
   clearScore();
 
-  // NOTE
-  // This is required to pass the test case "setEventListeners() in the startGame()"
-  // But it is not required to add event every time when a game start.
-  // I am calling this method after the page load and this approch required to call only once.
-  // check setupGame event handler for more info
-  // setEventListeners()
-
   // Original code
   setDuration(10);
   showUp();
+  play();
 
   // new code
   startTimer();
@@ -331,7 +325,6 @@ const renderGame = () => {
 * This function is used to setup the game Setup calling other fuctions.
 */
 const setupGame = () => {
-  play();
   // Add hole & mole content
   renderGame();
 
