@@ -52,7 +52,7 @@ function startGame() {
   // Original code
   setDuration(10);
   showUp();
-  play();
+  loopAudio(song)
 
   // new code
   startTimer();
