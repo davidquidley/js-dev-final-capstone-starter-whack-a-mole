@@ -6,6 +6,22 @@ const score = document.querySelector("#score");  // TODO: Add the missing query 
 const timerDisplay = document.querySelector("#timer"); // use querySelector() to get the timer element.
 const grid = document.querySelector("#grid");
 const gameLevel = document.querySelector("#game-level");
+//audio related functions
+const audioHit = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/hit.mp3?raw=true");
+const song = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/molesong.mp3?raw=true");
+function playAudio(audioObject) {
+  audioObject.play();
+}
+function loopAudio(audioObject) {
+  audioObject.loop = true;
+  playAudio(audioObject);
+}
+function stopAudio(audioObject) {
+  audioObject.pause();
+}
+function play(){
+  playAudio(song);
+}
 
 // Declare global variables
 const totalHoles = 9;
@@ -241,6 +257,7 @@ function startTimer() {
 * the moles.
  */
 function whack(event) {
+  playAudio(audioHit);
   points = updateScore();
   return points;
 }
@@ -279,7 +296,7 @@ function setDuration(duration) {
  * timer using clearInterval. Returns "game stopped".
  */
 function stopGame() {
-  // stopAudio(song);  //optional
+  stopAudio(song);
   clearInterval(timer);
   toggleStartButtonDisable();
   return "game stopped";
@@ -314,6 +331,7 @@ const renderGame = () => {
 * This function is used to setup the game Setup calling other fuctions.
 */
 const setupGame = () => {
+  play();
   // Add hole & mole content
   renderGame();
 
