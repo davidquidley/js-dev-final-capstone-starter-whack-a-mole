@@ -6,9 +6,15 @@ const score = document.querySelector("#score");  // TODO: Add the missing query 
 const timerDisplay = document.querySelector("#timer"); // use querySelector() to get the timer element.
 const grid = document.querySelector("#grid");
 const gameLevel = document.querySelector("#game-level");
-//audio related functions
+/*
+audio related files
+*/
 const audioHit = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/hit.mp3?raw=true");
 const song = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/molesong.mp3?raw=true");
+
+/*
+audio functions
+*/
 function playAudio(audioObject) {
   audioObject.play();
 }
