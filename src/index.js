@@ -9,8 +9,8 @@ let time = 0;
 let timer;
 let lastHole = 0;
 let points = 0;
-let difficulty = "easy";
-let clicked = false;
+let difficulty = "hard";
+
 /**
  * Generates a random integer within a range.
  *
@@ -21,7 +21,35 @@ let clicked = false;
  *
  */
 function randomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const audioHit = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/hit.mp3?raw=true");
+const song = new Audio("https://github.com/gabrielsanchez/erddiagram/blob/main/molesong.mp3?raw=true");
+
+function playAudio(audioObject) {
+  audioObject.play();
+}
+
+function loopAudio(audioObject) {
+  audioObject.loop = true;
+  playAudio(audioObject);
+}
+
+function stopAudio(audioObject) {
+  audioObject.pause();
+}
+
+function play(){
+  playAudio(song);
+}
+
+function playHit(){
+  playAudio(audioHit)
+}
+
+function stop (){
+  stopAudio(song)
 }
 
 /**
@@ -40,14 +68,14 @@ function randomInteger(min, max) {
  *
  */
 function setDelay(difficulty) {
-  if (difficulty === "easy") {
-    return 1500;
-  }
-  if(difficulty === "normal"){
-    return 1000;
-  }
-  if (difficulty === "hard") {
-    return randomInteger(600,1200);
+  if (difficulty === 'easy') {
+    return 1500; // 1,500 milliseconds (1.5 seconds)
+  } else if (difficulty === 'normal') {
+    return 1000; // 1,000 milliseconds (1 second)
+  } else if (difficulty === 'hard') {
+    return randomInteger(600, 1200); // Random time between 600 and 1,200 milliseconds (0.6 to 1.2 seconds)
+  } else {
+    throw new Error('Invalid difficulty. Please use "easy", "normal", or "hard".');
   }
   
 }
@@ -66,17 +94,21 @@ function setDelay(difficulty) {
  * const holes = document.querySelectorAll('.hole');
  * chooseHole(holes) //> returns one of the 9 holes that you defined
  */
+let lastHoleIndex = -1;
+
 function chooseHole(holes) {
-  let index = randomInteger(0,8);
+  const index = randomInteger(0, 8);
   const hole = holes[index];
-  if (hole === lastHole) {
+  if (hole === lastHole){
     return chooseHole(holes);
   }
   lastHole = hole;
   return hole;
-
 }
 
+
+  // TODO: Write your code here.
+  
 /**
 *
 * Calls the showUp function if time > 0 and stops the game if time = 0.
@@ -99,14 +131,18 @@ function chooseHole(holes) {
 */
 function gameOver() {
   // TODO: Write your code here
-  if(time > 0) {
-    let timeoutId = showUp();
-    return timeoutId;
-  }
-  else {
+  if (time > 0) {
+    // If there is still time, call showUp() again to continue the game.
+    let timeoutID = showUp();
+    return timeoutID;
+  } else {
+    // If there is no more time, call stopGame() to end the game.
     let gameStopped = stopGame();
+
     return gameStopped;
   }
+    
+  
 }
 
 /**
@@ -119,8 +155,9 @@ function gameOver() {
 *
 */
 function showUp() {
-  let delay = setDelay("easy"); // TODO: Update so that it uses setDelay()
+  let delay = setDelay('normal'); // TODO: Update so that it uses setDelay()
   const hole = chooseHole(holes);  // TODO: Update so that it use chooseHole()
+
   return showAndHide(hole, delay);
 }
 
@@ -135,12 +172,14 @@ function showUp() {
 function showAndHide(hole, delay){
   // TODO: call the toggleVisibility function so that it adds the 'show' class.
   toggleVisibility(hole);
+  
   const timeoutID = setTimeout(() => {
     // TODO: call the toggleVisibility function so that it removes the 'show' class when the timer times out.
     toggleVisibility(hole);
+
     gameOver();
-  }, delay);
-   // TODO: change the setTimeout delay to the one provided as a parameter
+  }, delay); // TODO: change the setTimeout delay to the one provided as a parameter
+
   return timeoutID;
 }
 
@@ -151,7 +190,8 @@ function showAndHide(hole, delay){
 *
 */
 function toggleVisibility(hole){
-  hole.classList.toggle('show')
+  // TODO: add hole.classList.toggle so that it adds or removes the 'show' class.
+  hole.classList.toggle('show');
   return hole;
 }
 
@@ -167,8 +207,10 @@ function toggleVisibility(hole){
 */
 function updateScore() {
   // TODO: Write your code here
-points ++;
-score.textContent = points;
+  points++;
+
+  score.textContent = points;
+
   return points;
 }
 
@@ -181,8 +223,8 @@ score.textContent = points;
 */
 function clearScore() {
   // TODO: Write your code here
-  points = 0;
-  score.textContent = points;
+   points = 0;
+   score.textContent = points;
   return points;
 }
 
@@ -194,10 +236,11 @@ function clearScore() {
 function updateTimer() {
   // TODO: Write your code here.
   // hint: this code is provided to you in the instructions.
-  if (time > 0) {
+  if (time > 0){
     time -= 1;
     timerDisplay.textContent = time;
   }
+  
   return time;
 }
 
@@ -209,7 +252,7 @@ function updateTimer() {
 */
 function startTimer() {
   // TODO: Write your code here
-  timer = setInterval(updateTimer, 1000);
+   timer = setInterval(updateTimer, 1000);
   return timer;
 }
 
@@ -224,7 +267,9 @@ function startTimer() {
 function whack(event) {
   // TODO: Write your code here.
   updateScore();
-  cursorAnimation();
+  playHit();
+
+
   return points;
 }
 
@@ -234,32 +279,13 @@ function whack(event) {
 * for an example on how to set event listeners using a for loop.
 */
 function setEventListeners(){
+  // TODO: Write your code here
+  moles.forEach(
+    mole => mole.addEventListener('click', whack)
+  );
 
-
-  function moleListener(mole) {
-   // if (clicked) {
-    mole.addEventListener('click', whack);
-    //clicked = false;
-   // }
- // else 
-  //clicked = true;
+  return moles;
 }
-moles.forEach(moleListener);
-  
-    return moles;
-}
-
- function cursorAnimation() {
-   let body = document.getElementsByTagName("body")[0];
-
-  body.style.cursor= "url('https://raw.githubusercontent.com/nderespino/whack-a-mole/main/assets/cat-paw3.png'), auto";
- 
-  setTimeout(() => {
-   body.style.cursor = "url('https://raw.githubusercontent.com/nderespino/whack-a-mole/main/assets/cat-paw.png'), auto";
- 
-  }, 300);
- };
-
 
 /**
 *
@@ -269,6 +295,7 @@ moles.forEach(moleListener);
 */
 function setDuration(duration) {
   time = duration;
+
   return time;
 }
 
@@ -281,6 +308,7 @@ function setDuration(duration) {
 function stopGame(){
   // stopAudio(song);  //optional
   clearInterval(timer);
+
   return "game stopped";
 }
 
@@ -291,15 +319,18 @@ function stopGame(){
 *
 */
 function startGame(){
-  clearScore();
+  play();
   setDuration(10);
   startTimer();
-  showUp();
   setEventListeners();
+  moles.forEach(hole => hole.classList.remove('show'));//hide the moles
+  showUp();
   return "game started";
 }
 
 startButton.addEventListener("click", startGame);
+
+
 
 
 // Please do not modify the code below.
